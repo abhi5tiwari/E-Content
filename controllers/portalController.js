@@ -44,13 +44,13 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).json({ success: false, message: 'Username and Password are required' });
+  const { usernameOrEmail, password } = req.body;
+  if (!usernameOrEmail || !password) {
+    return res.status(400).json({ success: false, message: 'Username/Email and Password are required' });
   }
 
   try {
-    const user = await query.get('SELECT * FROM users WHERE username = ?', [username]);
+    const user = await query.get('SELECT * FROM users WHERE username = ? OR email = ?', [usernameOrEmail, usernameOrEmail]);
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
